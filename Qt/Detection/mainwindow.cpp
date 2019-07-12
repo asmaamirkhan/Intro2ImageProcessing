@@ -6,15 +6,18 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-
 using namespace cv;
 
 using namespace std;
 
 #include <QFileDialog>
 #include <QString>
+
+// function protoype
 void detectFaces(string);
+
 string LABEL = "";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -29,27 +32,44 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked()
 {
+    // get image path
     QString path = QFileDialog::getOpenFileName();
+
+    // detect faces
     detectFaces(path.toStdString());
+
+    // set label text
     ui->label->setText(QString::fromStdString(LABEL));
 }
 
 void detectFaces(string path){
     vector <Rect> faces;
+
+    // open image
     Mat image = imread(path,IMREAD_COLOR);
-    Mat rgb;
-    cvtColor(image, rgb,COLOR_BGR2GRAY);
+    Mat gray;
+
+    // convert into gray scale
+    cvtColor(image, gray, COLOR_BGR2GRAY);
+
+    // initialize haar cascade
     CascadeClassifier cdc;
     cdc.load("C:\\Users\\asmaa\\Desktop\\OPENCV\\Classifiers\\haarcascade_frontalface_default.xml");
-    cdc.detectMultiScale(rgb, faces, 1.13, 4 );
 
+    // detect faces
+
+    equalizeHist(gray,gray);
+    cdc.detectMultiScale(gray, faces, 1.13, 4 );
+
+    // draw triangles
     for(int i=0; i<faces.size(); i++){
         rectangle(image, faces[i], Scalar(255,0,0), 10);
     }
 
-    //putText(image, "Number of detected faces: "+to_string(faces.size()), Point(100,100), FONT_HERSHEY_DUPLEX,1,CV_RGB(0,255,0),5);
+    // set label text
     LABEL = "RESULT:\nNumber of detected faces: "+to_string(faces.size());
 
+    // show window
     namedWindow(path, WINDOW_AUTOSIZE);
     imshow(path, image);
 }
