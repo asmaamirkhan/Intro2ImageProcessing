@@ -90,33 +90,6 @@ void detectFacesHaar(){
 }
 
 void detectFacesHOG(){
-    vector <Rect> faces;
-
-    // open image
-    Mat image = imread(PATH,IMREAD_COLOR);
-    Mat gray;
-
-    // convert into gray scale
-    cvtColor(image, gray, COLOR_BGR2GRAY);
-
-    // initialize haar cascade
-    CascadeClassifier cdc;
-    cdc.load("C:\\Users\\asmaa\\Desktop\\OPENCV\\Classifiers\\haarcascade_frontalface_default.xml");
-
-    // detect faces
-    equalizeHist(gray,gray);
-    cdc.detectMultiScale(gray, faces, 1.13, 4 );
-
-    // draw triangles
-    for(int i=0; i<faces.size(); i++){
-        rectangle(image, faces[i], Scalar(255,0,0), 10);
-    }
-
-    // set label text
-    LABEL = "RESULT:\nNumber of detected faces: "+to_string(faces.size());
-
-    // show window
-    namedWindow(PATH, WINDOW_AUTOSIZE);
-    imshow(PATH, image);
+    // implement this
 }
 
